@@ -13,52 +13,59 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class DisciplinaController {
+class DisciplinaController {
 
-    private List<Disciplina> list;
+	private List<Disciplina> lista;
 
-    public DisciplinaController() {
-        this.list = new ArrayList<>();
-        // Corrigindo a chamada ao construtor com parâmetros corretos
-        this.list.add(new Disciplina(1, "Linguagem de Programação 2", "LP2", "Sistemas de Informação", 3));
-    }
+	public ProfessorController() {
+		this.lista = new ArrayList<>();
+		lista.add(new Disciplina(1, "Linguagem de Programação 2", "LP2", "Sistemas de Informação", 3));
+	}
 
-    // GET: Retorna todas as disciplinas
-    @GetMapping
-    public List<Disciplina> getAllDisciplinas() {
-        return list;
-    }
-
-    // GET: Retorna uma disciplina pelo ID
-    @GetMapping("/{id}")
-    public Disciplina getDisciplinaById(@PathVariable int id) {
-        return list.stream()
-                   .filter(d -> d.getId() == id)
-                   .findFirst()
-                   .orElse(null);
-    }
-
-    // POST: Adiciona uma nova disciplina
-    @PostMapping
-    public void addDisciplina(@RequestBody Disciplina disciplina) {
-        list.add(disciplina);
-    }
-
-    // PUT: Atualiza uma disciplina existente pelo ID
-    @PutMapping("/{id}")
-    public void updateDisciplina(@PathVariable int id, @RequestBody Disciplina novaDisciplina) {
-        Disciplina disciplina = getDisciplinaById(id);
-        if (disciplina != null) {
-            disciplina.setNome(novaDisciplina.getNome());
+	@GetMapping("/api/lista")
+	Iterable<Professor> getDisciplina() {
+		return this.lista;
+	}
+	
+	@GetMapping("/api/lista/{id}")
+	Optional<Disciplina> getADisciplina(@PathVariable long id) {
+		for (Disciplina d: lista) {
+			if (p.getId() == id) {
+				return Optional.of(d);
+			}
+		}
+		return Optional.empty();
+	}
+	
+	@PostMapping("/api/lista")
+	Professor createDisciplina(@RequestBody Disciplina d) {
+		long maxId = 1;
+		for (Disciplina di: lista) {
+			if (di.getId() > maxId) {
+				maxId = di.getId();
+			}
+		}
+		d.setId(maxId+1);
+		lista.add(d);
+		return d;
+	}
+	
+	@PutMapping("/api/lista/{diId}")
+	Optional<Disciplina> updateDisciplina(@RequestBody Disciplina disciplinaRequest, @PathVariable long diId) {
+		Optional<Disciplina> opt = this.getDisciplina(diId);
+		if (opt.isPresent()) {
+			Disciplina disciplina = opt.get();
+			disciplina.setNome(novaDisciplina.getNome());
             disciplina.setSigla(novaDisciplina.getSigla());
             disciplina.setCurso(novaDisciplina.getCurso());
             disciplina.setSemestre(novaDisciplina.getSemestre());
-        }
-    }
+		}
 
-    // DELETE: Remove uma disciplina pelo ID
-    @DeleteMapping("/{id}")
-    public void deleteDisciplina(@PathVariable int id) {
-        list.removeIf(d -> d.getId() == id);
-    }
+		return opt;				
+	}	
+	
+	@DeleteMapping(value = "/api/professores/{id}")
+	void deleteProfessor(@PathVariable long id) {
+		professores.removeIf(p -> p.getId() == id);
+	}		
 }
