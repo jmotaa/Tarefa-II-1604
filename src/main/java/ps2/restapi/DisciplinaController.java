@@ -17,7 +17,7 @@ class DisciplinaController {
 
 	private List<Disciplina> lista;
 
-	public ProfessorController() {
+	public DisciplinaController() {
 		this.lista = new ArrayList<>();
 		lista.add(new Disciplina(1, "Linguagem de Programação 2", "LP2", "Sistemas de Informação", 3));
 	}
